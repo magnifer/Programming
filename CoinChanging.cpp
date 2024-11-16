@@ -1,66 +1,44 @@
 /*
  * @author Deepesh Soni
- * Problem: Given an array of denomination of coins and a total, find subset in array which adds upto total.
- * Time Complexity: O(length*totalWeight)
- * Space Complexity: )(length*totalWeight)
+ * Problem: Given an array of denomination of coins and a amount, find subset in array which adds upto amount.
+ * Time Complexity: O(length*amount)
+ * Space Complexity: )(length*amount)
  */
 
 #include <iostream>
+#include <vector>
 using namespace std;
 
-int NoOfCoins(int *coin, int length, int total)
+int NoOfCoins(vector<int> &coins, int amount)
 {
-    int dp[length][++total];
-    std::fill(&dp[0][0], &dp[0][0] + sizeof(dp) / sizeof(dp[0][0]), 0);
+    vector<long> dp(amount + 1, INT32_MAX);
+    dp[0] = 0;
 
-    // for (int j = 0; j < total; j++)
-    // {
-    //     dp[0][j] = j;
-    // }
-
-    for (int i = 0; i < length; i++)
+    for (int j = 0; j <= amount; j++)
     {
-        for (int j = 0; j < total; j++)
-        {
-            cout << dp[i][j] << " ";
-        }
-        cout << "\n";
+        cout << dp[j] << " ";
     }
     cout << "\n";
 
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < coins.size(); i++)
     {
-        for (int j = 1; j < total; j++)
+        for (int j = coins[i]; j <= amount; j++)
         {
-            if (j < coin[i])
-            {
-                dp[i][j] = dp[i - 1][j];
-            }
-            else
-            {
-                dp[i][j] = min(dp[i - 1][j], 1 + dp[i][j - coin[i]]);
-            }
-        }
-    }
-
-    for (int i = 0; i < length; i++)
-    {
-        for (int j = 0; j < total; j++)
-        {
-            cout << dp[i][j] << " ";
+            dp[j] = min(dp[j], 1 + dp[j - coins[i]]);
+            cout << dp[j] << " ";
         }
         cout << "\n";
     }
 
-    return dp[length][total - 1];
+    return dp[amount] == INT32_MAX ? -1 : dp[amount];
 }
 
 int main()
 {
-    int total = 11;
-    int coin[] = {1, 5, 6, 8};
-    int length = sizeof(coin) / sizeof(coin[0]);
-    cout << NoOfCoins(coin, length, total);
+    int amount = 11;
+    vector<int> coins = {1, 2, 5};
+    int length = sizeof(coins) / sizeof(coins[0]);
+    cout << NoOfCoins(coins, amount);
 
     return 0;
 }
